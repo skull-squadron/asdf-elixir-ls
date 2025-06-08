@@ -29,9 +29,25 @@ function install() {
 
   unzip "${tmp_download_dir}/${download_filename}"
   mkdir -p ./bin
-  ln -s ../language_server.sh ./bin/elixir-ls
-  ln -s ../debugger.sh ./bin/elixir-ls-debugger
-  cp -fpr * "${install_path}"
+  if [[ -e ../debugger.sh ]]; then
+    local debug_file=debugger.sh
+  elif [[ -e ../debug_adapter.sh ]]; then
+    local debug_file=debug_adapter.sh
+  else
+    echo >&2 'Missing a valid elixir-ls-debugger file'; exit 1
+  fi
+  cat <<LSP >bin/elixir-ls
+#!/bin/sh
+exec "${install_path}/language_server.sh"
+LSP
+  chmod +x bin/elixir-ls
+  cat >bin/elixir-ls-debugger <<DEBUGGER
+#!/bin/sh
+exec "${install_path}/${debug_file}"
+DEBUGGER
+  chmod +x bin/elixir-ls-debugger
+
+  cp -fpR * "${install_path}"
 
   popd >/dev/null
   popd >/dev/null
