@@ -29,9 +29,9 @@ function install() {
 
   unzip "${tmp_download_dir}/${download_filename}"
   mkdir -p ./bin
-  if [[ -e ../debugger.sh ]]; then
+  if [[ -e debugger.sh ]]; then
     local debug_file=debugger.sh
-  elif [[ -e ../debug_adapter.sh ]]; then
+  elif [[ -e debug_adapter.sh ]]; then
     local debug_file=debug_adapter.sh
   else
     echo >&2 'Missing a valid elixir-ls-debugger file'; exit 1
